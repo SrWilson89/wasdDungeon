@@ -384,8 +384,8 @@ function upgradeStat(stat) {
     if (upgradePoints <= 0) return;
     upgradePoints--;
     if (stat === 'hp') {
-        character.maxHp++;
-        character.hp++;
+        character.maxHp += 3;
+        character.hp += 3;
     } else if (stat === 'str') character.str++;
     else if (stat === 'mag') character.mag++;
     else if (stat === 'luk') character.luk++;
@@ -393,6 +393,51 @@ function upgradeStat(stat) {
     updateStatsDisplay();
     document.getElementById('upgrade-points').textContent = upgradePoints;
     messageArea.innerHTML = `✨ Has aumentado ${stat.toUpperCase()} en 1. ✨`;
+}
+
+// ========== 7b. Curación mágica ==========
+let magicHealCooldown = false;
+
+function useMagicHeal() {
+    if (magicHealCooldown) {
+        messageArea.innerHTML = "⏳ La magia aún se recupera... espera un momento.";
+        return;
+    }
+    if (character.mag <= 1) {
+        messageArea.innerHTML = "🔮 No tienes suficiente magia para curar (necesitas al menos 2).";
+        return;
+    }
+    if (character.hp >= character.maxHp) {
+        messageArea.innerHTML = "💚 Tu vida ya está al máximo, no es necesario curar.";
+        return;
+    }
+    if (gameWin) return;
+
+    // Consumir 1 punto de magia
+    character.mag--;
+
+    // Recuperar entre 25% y 40% de vida máxima
+    let pct = (Math.random() * 0.15 + 0.25); // 25% a 40%
+    let healAmount = Math.floor(character.maxHp * pct);
+    let prevHp = character.hp;
+    character.hp = Math.min(character.maxHp, character.hp + healAmount);
+    let actual = character.hp - prevHp;
+
+    messageArea.innerHTML = `🔮 ¡Hechizo de curación! Recuperas ${actual} ❤️ (${Math.round(pct*100)}% de vida). Magia restante: ${character.mag}`;
+    updateStatsDisplay();
+
+    // Cooldown de 3 segundos
+    magicHealCooldown = true;
+    const healBtn = document.getElementById('magic-heal-btn');
+    if (healBtn) {
+        healBtn.disabled = true;
+        healBtn.textContent = "🔮 Recargando...";
+        setTimeout(() => {
+            magicHealCooldown = false;
+            healBtn.disabled = false;
+            healBtn.textContent = "🔮 Curación Mágica";
+        }, 3000);
+    }
 }
 
 function updateStatsDisplay() {
@@ -449,9 +494,11 @@ function initCharacterCreator() {
     
     function modifyStat(stat, delta) {
         let current = character[stat === 'hp' ? 'maxHp' : stat];
-        let newVal = current + delta;
+        // HP usa incrementos de 3 por punto repartido
+        let increment = (stat === 'hp') ? 3 : 1;
+        let newVal = current + delta * increment;
         if (delta > 0 && remaining <= 0) return;
-        if (delta < 0 && current <= 5) return;
+        if (delta < 0 && current <= (stat === 'hp' ? 5 : 5)) return;
         if (newVal >= 5) {
             character[stat === 'hp' ? 'maxHp' : stat] = newVal;
             remaining -= delta;
@@ -542,6 +589,8 @@ function init() {
     resetBtn.addEventListener('click', () => {
         if (gameScreen.style.display === 'block') resetGame();
     });
+    const healBtn = document.getElementById('magic-heal-btn');
+    if (healBtn) healBtn.addEventListener('click', useMagicHeal);
 }
 
 document.addEventListener('DOMContentLoaded', init);
