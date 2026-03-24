@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Dragones y Mazmorras - RPG con Enemigos</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Pantalla de creación de personaje -->
+    <div id="character-creator" class="creator-overlay">
+        <div class="creator-card">
+            <h2>⚔️ CREA TU AVENTURERO ⚔️</h2>
+            <div class="name-input">
+                <label>NOMBRE (3 letras):</label>
+                <input type="text" id="hero-name" maxlength="3" placeholder="EJ: THR" autocomplete="off">
+            </div>
+            <div class="stats-distribution">
+                <p>Puntos base: 5 en cada atributo.<br>Distribuye <span id="points-left">6</span> puntos extra.</p>
+                <div class="stat-row">
+                    <span>💪 FUERZA</span>
+                    <button class="stat-minus" data-stat="str">-</button>
+                    <span id="stat-str" class="stat-value">5</span>
+                    <button class="stat-plus" data-stat="str">+</button>
+                </div>
+                <div class="stat-row">
+                    <span>❤️ VIDA</span>
+                    <button class="stat-minus" data-stat="hp">-</button>
+                    <span id="stat-hp" class="stat-value">5</span>
+                    <button class="stat-plus" data-stat="hp">+</button>
+                </div>
+                <div class="stat-row">
+                    <span>🔮 MAGIA</span>
+                    <button class="stat-minus" data-stat="mag">-</button>
+                    <span id="stat-mag" class="stat-value">5</span>
+                    <button class="stat-plus" data-stat="mag">+</button>
+                </div>
+                <div class="stat-row">
+                    <span>🍀 SUERTE</span>
+                    <button class="stat-minus" data-stat="luk">-</button>
+                    <span id="stat-luk" class="stat-value">5</span>
+                    <button class="stat-plus" data-stat="luk">+</button>
+                </div>
+                <div class="stat-row">
+                    <span>⚡ VELOCIDAD</span>
+                    <button class="stat-minus" data-stat="spd">-</button>
+                    <span id="stat-spd" class="stat-value">5</span>
+                    <button class="stat-plus" data-stat="spd">+</button>
+                </div>
+            </div>
+            <button id="start-adventure" class="start-btn">¡COMENZAR AVENTURA!</button>
+        </div>
+    </div>
+
+    <!-- Pantalla de juego (inicialmente oculta) -->
+    <div id="game-screen" style="display: none;">
+        <div class="game-wrapper">
+            <div class="hero-panel">
+                <div class="hero-name" id="hero-name-display">???</div>
+                <div class="hero-stats">
+                    <span>💪 <span id="stat-str-display">5</span></span>
+                    <span>❤️ <span id="stat-hp-display">5</span>/<span id="stat-hp-max">5</span></span>
+                    <span>🔮 <span id="stat-mag-display">5</span></span>
+                    <span>🍀 <span id="stat-luk-display">5</span></span>
+                    <span>⚡ <span id="stat-spd-display">5</span></span>
+                    <span>✨ <span id="stat-points-display">0</span> pts</span>
+                </div>
+                <button id="upgrade-btn" class="upgrade-button">⬆️ Mejorar Stats</button>
+            </div>
+            <div id="game-container" class="game-grid"></div>
+            <div id="message-area" class="message"></div>
+            <button id="reset-btn" class="reset-button">🔄 Reiniciar Aventura</button>
+        </div>
+    </div>
+
+    <!-- Modal de mejora de estadísticas -->
+    <div id="upgrade-modal" class="modal">
+        <div class="modal-content">
+            <h3>Mejora tus habilidades</h3>
+            <p>Tienes <span id="upgrade-points">0</span> puntos para gastar.</p>
+            <div class="stats-upgrade">
+                <div class="stat-row">
+                    <span>💪 FUERZA (+1)</span>
+                    <button class="upgrade-stat" data-stat="str">+</button>
+                </div>
+                <div class="stat-row">
+                    <span>❤️ VIDA (+1)</span>
+                    <button class="upgrade-stat" data-stat="hp">+</button>
+                </div>
+                <div class="stat-row">
+                    <span>🔮 MAGIA (+1)</span>
+                    <button class="upgrade-stat" data-stat="mag">+</button>
+                </div>
+                <div class="stat-row">
+                    <span>🍀 SUERTE (+1)</span>
+                    <button class="upgrade-stat" data-stat="luk">+</button>
+                </div>
+                <div class="stat-row">
+                    <span>⚡ VELOCIDAD (+1)</span>
+                    <button class="upgrade-stat" data-stat="spd">+</button>
+                </div>
+            </div>
+            <button id="close-modal" class="close-btn">Cerrar</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
